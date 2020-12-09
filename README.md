@@ -11,6 +11,10 @@ Asset tools - these tools are designed to export Device and User asset data into
 2. Through the Sevco Shell by running _orgs info <index>_ and coping the OrgID value.
 
     $ export ORG="paste OrgID here"
+   
+-  You have the option to define an API endpoint to allow connection to Development or Demo environments.  The default is https://api.sev.co if no environmental variable is defined.
+
+    $ export API="paste API endpoint"
 
 # Execution
 Run the scripts with _python devices.py_ or _python users.py_ as appropriate.  The devices.py script creates a file called devices.csv and users.py creates a file called users.csv.
