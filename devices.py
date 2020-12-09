@@ -15,23 +15,27 @@ start = time.time() - (86400*DAYS_BACK)
 page = 1
 per_page = 100
 header = ["Sevco ID","Timestamp","Names","FQDN","IP","MAC","Manufacturer","OS","OS Category","Recent Users","Groups","Distinguished Name"]
+api_endpoint = "https://api.sev.co"
 
 if not os.environ.get("JWT"):
     raise Exception("Need API key in JWT environment variable.")
 if not os.environ.get("ORG"):
     raise Exception("Need target org id in ORG environment variable.")
+if os.environ.get("API"):
+    api_endpoint = os.environ['API']
+
 
 org = os.environ['ORG']
 token = os.environ['JWT']
 
 # Grab a list of sources to build header
-r = requests.get("https://dev.api.sevcolabs.com/v1/integration/source",
+r = requests.get(api_endpoint+"/v1/integration/source",
                  headers={ 'Authorization': token, 'X-Sevco-Target-Org': org})
 r.raise_for_status()
 sources = r.json()
 
 # Grab a list of integrations configured for the org
-r = requests.get("https://dev.api.sevcolabs.com/v1/integration/source/config",
+r = requests.get(api_endpoint+"/v1/integration/source/config",
                  headers={ 'Authorization': token, 'X-Sevco-Target-Org': org})
 r.raise_for_status()
 integrations = r.json()
@@ -44,7 +48,7 @@ for integration in integrations:
 
 # Build the Devices JSON structure
 while True:
-    r = requests.get("https://dev.api.sevcolabs.com/v1/asset/device",
+    r = requests.get(api_endpoint+"/v1/asset/device",
                      headers={'Authorization': token, 'X-Sevco-Target-Org': org},
                      params={'start': start, 'per_page': per_page, 'page': page})
 
@@ -129,4 +133,3 @@ with open ('devices.csv', 'w', newline='') as csvfile:
             rows[column] = str(row[i]).replace(", ","\n").replace("'","").replace("[","").replace("]","")
 
         writer.writerow(rows)
-
