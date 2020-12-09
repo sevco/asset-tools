@@ -12,6 +12,7 @@ sources = []
 my_sources = {}
 page = 1
 per_page = 100
+api_endpoint = "https://api.sev.co"
 
 DAYS_BACK = 7
 start = time.time() - (86400*DAYS_BACK)
@@ -22,18 +23,20 @@ if not os.environ.get("JWT"):
     raise Exception("Need API key in JWT environment variable.")
 if not os.environ.get("ORG"):
     raise Exception("Need target org id in ORG environment variable.")
+if os.environ.get("API"):
+    api_endpoint = os.environ['API']
 
 org = os.environ['ORG']
 token = os.environ['JWT']
 
 # Grab all available sources to create header
-r = requests.get("https://dev.api.sevcolabs.com/v1/integration/source",
+r = requests.get(api_endpoint+"/v1/integration/source",
                  headers={ 'Authorization': token, 'X-Sevco-Target-Org': org})
 r.raise_for_status()
 sources = r.json()
 
 # Grab all the integrations configured for an Org
-r = requests.get("https://dev.api.sevcolabs.com/v1/integration/source/config",
+r = requests.get(api_endpoint+"/v1/integration/source/config",
                  headers={ 'Authorization': token, 'X-Sevco-Target-Org': org})
 r.raise_for_status()
 integrations = r.json()
@@ -46,7 +49,7 @@ for integration in integrations:
 
 # Pull all the user information into a JSON structure
 while True:
-    r = requests.get("https://dev.api.sevcolabs.com/v1/asset/user",
+    r = requests.get(api_endpoint+"/v1/asset/user",
                      headers={'Authorization': token, 'X-Sevco-Target-Org': org},
                      params={'start': start, 'per_page': per_page, 'page': page})
 
