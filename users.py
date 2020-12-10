@@ -17,7 +17,7 @@ api_endpoint = "https://api.sev.co"
 DAYS_BACK = 7
 start = time.time() - (86400*DAYS_BACK)
 
-header = ["Sevco ID","Timestamp","Names","Emails","Password Change","Groups"]
+header = ["Sevco ID","Timestamp","Names","Emails","Password Change","Last Name","First Name"]
 
 if not os.environ.get("JWT"):
     raise Exception("Need API key in JWT environment variable.")
@@ -84,13 +84,18 @@ with open ('users.csv', 'w', newline='') as csvfile:
         else:
             row.append("")
 
-        if 'password_change_timestamp' in user['attributes'].keys():
-            row.append(user['attributes']['password_change_timestamp']['value'])
+        if 'password_change' in user['attributes'].keys():
+            row.append(user['attributes']['password_change']['value'])
         else:
             row.append("")
     
-        if 'groups' in user['attributes'].keys():
-            row.append(user['attributes']['groups']['value'])
+        if 'last_name' in user['attributes'].keys():
+            row.append(user['attributes']['last_name']['value'])
+        else:
+            row.append("")
+
+        if 'first_name' in user['attributes'].keys():
+            row.append(user['attributes']['first_name']['value'])
         else:
             row.append("")
 
