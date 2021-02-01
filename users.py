@@ -10,7 +10,7 @@ users = []
 rows = {}
 sources = []
 my_sources = {}
-page = 1
+page = 0
 per_page = 100
 api_endpoint = "https://api.sev.co"
 
@@ -55,9 +55,8 @@ while True:
 
     r.raise_for_status()
     data = r.json()
-    if len(data['items']) == 0: break
-
     users.extend(data['items'])
+    if data['pagination']['per_page'] < 100: break
     page += 1
 
 # Add all the customer sources to the header
