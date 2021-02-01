@@ -12,7 +12,7 @@ my_sources = {}
 rows = {}
 DAYS_BACK = 7
 start = time.time() - (86400*DAYS_BACK)
-page = 1
+page = 0
 per_page = 100
 header = ["Sevco ID","Timestamp","Names","FQDN","IP","MAC","Manufacturer","OS","OS Category","Recent Users","Groups","Distinguished Name"]
 api_endpoint = "https://api.sev.co"
@@ -54,9 +54,8 @@ while True:
 
     r.raise_for_status()
     data = r.json()
-    if len(data['items']) == 0: break
-
     devices.extend(data['items'])
+    if data['pagination']['per_page'] < 100: break
     page += 1
 
 # Add the sources to the header
