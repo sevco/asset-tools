@@ -72,8 +72,8 @@ with open ('devices.csv', 'w', newline='') as csvfile:
         row.append(device['id'])
         row.append(device['timestamp'])
 
-        if 'hostname' in device['attributes'].keys():
-          row.append(device['attributes']['hostname']['value'])
+        if 'hostnames' in device['attributes'].keys():
+          row.append(device['attributes']['hostnames']['value'])
         else:
             row.append("")
 
